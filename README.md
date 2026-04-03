@@ -1,1 +1,803 @@
-# cleaning-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shared Cleaning Checklist</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #f9f8f7;
+      color: #1a1a1a;
+    }
+
+    .app-header {
+      background: #f0ebe5;
+      padding: 1.5rem 1rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 0.5px solid #d0ccc4;
+    }
+
+    .app-header h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+
+    .app-header p {
+      margin: 0.5rem 0 0;
+      font-size: 13px;
+      color: #6b6b6b;
+    }
+
+    .sync-status {
+      font-size: 11px;
+      color: #6b6b6b;
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    .name-input-container {
+      padding: 0 1rem 1rem;
+    }
+
+    .name-input-label {
+      font-size: 12px;
+      color: #6b6b6b;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .name-input {
+      padding: 6px 10px;
+      border: 0.5px solid #c5c1ba;
+      border-radius: 8px;
+      font-size: 12px;
+      background: #ffffff;
+      color: #1a1a1a;
+      width: 100%;
+      max-width: 200px;
+    }
+
+    .name-input:focus {
+      outline: none;
+      border-color: #1d9e75;
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 8px;
+      margin: 0 1rem 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 8px 12px;
+      border: 0.5px solid #c5c1ba;
+      background: #ffffff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      color: #1a1a1a;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover {
+      border-color: #a89f97;
+      background: #f0ebe5;
+    }
+
+    .filter-btn.active {
+      background: #185fa5;
+      border-color: #185fa5;
+      color: #ffffff;
+    }
+
+    .progress-text {
+      text-align: center;
+      font-size: 12px;
+      color: #6b6b6b;
+      margin: -1rem 1rem 0.5rem;
+    }
+
+    .progress-bar {
+      margin: 0 1rem 1.5rem;
+      background: #f0ebe5;
+      border-radius: 8px;
+      height: 8px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #1d9e75;
+      transition: width 0.3s;
+    }
+
+    .tasks-list {
+      padding: 0 1rem 2rem;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: #6b6b6b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 1.5rem 0 1rem;
+      padding-top: 0.5rem;
+      border-top: 0.5px solid #d0ccc4;
+    }
+
+    .task-card {
+      background: #ffffff;
+      border: 0.5px solid #d0ccc4;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .task-card:active {
+      transform: scale(0.99);
+    }
+
+    .task-card.completed {
+      background: #f0ebe5;
+      opacity: 0.7;
+    }
+
+    .task-header {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .checkbox {
+      width: 20px;
+      height: 20px;
+      border: 1.5px solid #c5c1ba;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 2px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      transition: all 0.2s;
+    }
+
+    .task-card.completed .checkbox {
+      background: #1d9e75;
+      border-color: #1d9e75;
+    }
+
+    .checkbox::after {
+      content: '✓';
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: bold;
+      opacity: 0;
+    }
+
+    .task-card.completed .checkbox::after {
+      opacity: 1;
+    }
+
+    .task-content {
+      flex: 1;
+    }
+
+    .task-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+
+    .task-card.completed .task-title {
+      text-decoration: line-through;
+      color: #6b6b6b;
+    }
+
+    .task-details {
+      margin: 8px 0 0;
+      font-size: 13px;
+      color: #6b6b6b;
+      line-height: 1.5;
+    }
+
+    .task-category {
+      display: inline-block;
+      background: #f0ebe5;
+      color: #6b6b6b;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
+    .completed-by {
+      font-size: 12px;
+      color: #6b6b6b;
+      margin-top: 6px;
+      font-weight: 500;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: #6b6b6b;
+    }
+
+    .empty-state p {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      margin: 1.5rem 1rem;
+      flex-wrap: wrap;
+    }
+
+    .reset-btn {
+      padding: 8px 12px;
+      border: 0.5px solid #c5c1ba;
+      background: #ffffff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      color: #6b6b6b;
+      transition: all 0.2s;
+    }
+
+    .reset-btn:hover {
+      border-color: #a89f97;
+      background: #f0ebe5;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #1a1a1a;
+        color: #e0e0e0;
+      }
+
+      .app-header {
+        background: #2a2a2a;
+        border-bottom-color: #444;
+      }
+
+      .app-header h1 {
+        color: #e0e0e0;
+      }
+
+      .app-header p,
+      .sync-status {
+        color: #999;
+      }
+
+      .name-input-label {
+        color: #999;
+      }
+
+      .name-input {
+        background: #2a2a2a;
+        color: #e0e0e0;
+        border-color: #444;
+      }
+
+      .filter-btn {
+        background: #2a2a2a;
+        color: #e0e0e0;
+        border-color: #444;
+      }
+
+      .filter-btn:hover {
+        background: #333;
+        border-color: #555;
+      }
+
+      .filter-btn.active {
+        background: #185fa5;
+        border-color: #185fa5;
+        color: #e0e0e0;
+      }
+
+      .progress-text {
+        color: #999;
+      }
+
+      .progress-bar {
+        background: #2a2a2a;
+      }
+
+      .section-title {
+        color: #999;
+        border-top-color: #444;
+      }
+
+      .task-card {
+        background: #2a2a2a;
+        border-color: #444;
+      }
+
+      .task-card.completed {
+        background: #1f2a1f;
+        opacity: 0.7;
+      }
+
+      .task-title {
+        color: #e0e0e0;
+      }
+
+      .task-details,
+      .task-category,
+      .completed-by {
+        color: #999;
+      }
+
+      .empty-state p {
+        color: #999;
+      }
+
+      .reset-btn {
+        background: #2a2a2a;
+        color: #999;
+        border-color: #444;
+      }
+
+      .reset-btn:hover {
+        background: #333;
+        border-color: #555;
+      }
+
+      .checkbox {
+        border-color: #444;
+        background: #2a2a2a;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-header">
+    <h1>Shared cleaning checklist</h1>
+    <p id="greeting">Working together</p>
+    <div class="sync-status" id="syncStatus">Syncing with local storage...</div>
+  </div>
+
+  <div class="name-input-container">
+    <label class="name-input-label">Your name (so they know who did what)</label>
+    <input type="text" id="userName" class="name-input" placeholder="e.g., You or Your Name" value="You">
+  </div>
+
+  <div class="progress-text" id="progressText">0 of 0 complete</div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+  </div>
+
+  <div class="filter-buttons">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="daily">Daily</button>
+    <button class="filter-btn" data-filter="weekly">Weekly</button>
+    <button class="filter-btn" data-filter="monthly">Monthly</button>
+    <button class="filter-btn" data-filter="quarterly">Quarterly</button>
+    <button class="filter-btn" data-filter="completed">Done</button>
+  </div>
+
+  <div class="tasks-list" id="tasksList"></div>
+
+  <div class="controls">
+    <button class="reset-btn" id="resetBtn">Reset daily tasks</button>
+    <button class="reset-btn" id="resetWeeklyBtn">Reset weekly tasks</button>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'shared-cleaning-checklist-v1';
+    const SYNC_INTERVAL = 3000; // Check for updates every 3 seconds
+
+    const tasks = [
+      // DAILY TASKS
+      {
+        category: "Daily",
+        title: "Kitchen sink & counters",
+        details: "Wipe down sink, countertop, and stovetop. Rinse out dishes before dishwasher."
+      },
+      {
+        category: "Daily",
+        title: "Dishes & loading dishwasher",
+        details: "Clear plates, cups, cutlery from everywhere. Load/unload dishwasher completely."
+      },
+      {
+        category: "Daily",
+        title: "Dining table & floor sweeping",
+        details: "Clear table, wipe surfaces. Sweep where you eat—crumbs add up fast."
+      },
+      {
+        category: "Daily",
+        title: "Bathroom sink & mirror",
+        details: "Wipe down sink, counter, and mirror. Quick swish of soap & water."
+      },
+      {
+        category: "Daily",
+        title: "Tidy bedroom/living spaces",
+        details: "Pick up clothes, clear floor of clutter. Things need a home, not the floor."
+      },
+      {
+        category: "Daily",
+        title: "Take out rubbish if needed",
+        details: "Don't wait for it to overflow. Check bins in kitchen and bathroom."
+      },
+
+      // WEEKLY DEEP CLEANS
+      {
+        category: "Weekly",
+        title: "Kitchen cupboards & dusting",
+        details: "Wipe down kitchen cupboard fronts, dust tops. This is the stuff people miss!"
+      },
+      {
+        category: "Weekly",
+        title: "Wipe skirting boards",
+        details: "Dust gathers on baseboards. Grab a damp cloth and wipe around the room."
+      },
+      {
+        category: "Weekly",
+        title: "Clean microwave inside",
+        details: "Wipe interior walls, turntable, and vents. Stops splatter buildup."
+      },
+      {
+        category: "Weekly",
+        title: "Wipe light switches & door handles",
+        details: "Fingerprints, dust, and grime love these. Everything gets grubby here."
+      },
+      {
+        category: "Weekly",
+        title: "Bathroom toilet deep clean",
+        details: "Under rim, seat hinges, base. Gets gross if you don't target it."
+      },
+      {
+        category: "Weekly",
+        title: "Shower/tub walls & tile grout",
+        details: "Spray and wipe walls, clean tile grout. Mold hides here if ignored."
+      },
+      {
+        category: "Weekly",
+        title: "Vacuum/mop floors",
+        details: "Under furniture, corners, edges. Dust settles where you don't see."
+      },
+      {
+        category: "Weekly",
+        title: "Dust shelves, windowsills, surfaces",
+        details: "Every flat surface collects dust. Use a microfibre cloth."
+      },
+      {
+        category: "Weekly",
+        title: "Clean inside fridge",
+        details: "Wipe shelves, check for spills/old food. Prevents smells."
+      },
+      {
+        category: "Weekly",
+        title: "Laundry (wash, dry, fold, put away)",
+        details: "All stages. It piles up if you skip any part."
+      },
+      {
+        category: "Weekly",
+        title: "Wipe bedroom furniture & surfaces",
+        details: "Dust dressers, nightstands, windowsills. Looks fresh when you do."
+      },
+      {
+        category: "Weekly",
+        title: "Kitchen appliance wipe-down",
+        details: "Fridge exterior, oven front, kettle—everything collects fingerprints."
+      },
+
+      // MONTHLY DEEP CLEANS
+      {
+        category: "Monthly",
+        title: "Oven interior deep clean",
+        details: "Inside walls, racks, floor. Built-up grime & splatters make it harder to cook."
+      },
+      {
+        category: "Monthly",
+        title: "Clean behind & under appliances",
+        details: "Fridge, cooker, dishwasher—things spill and dust accumulates behind them."
+      },
+      {
+        category: "Monthly",
+        title: "Wipe down all kitchen cupboard interiors",
+        details: "Inside shelves where food lives. Crumbs, spills, and dust hide here."
+      },
+      {
+        category: "Monthly",
+        title: "Deep clean bathroom exhaust fan",
+        details: "Vents clog with dust & moisture. Affects air quality in the bathroom."
+      },
+      {
+        category: "Monthly",
+        title: "Clean windows & window frames",
+        details: "Inside and outside sills, frames, glass. Grime builds up silently."
+      },
+      {
+        category: "Monthly",
+        title: "Wipe down all door frames & tops",
+        details: "Dust collects on tops of doors and in frame crevices. Often forgotten!"
+      },
+      {
+        category: "Monthly",
+        title: "Clean inside washing machine",
+        details: "Run cleaning cycle or wipe drum & seal. Mold and buildup cause smells."
+      },
+      {
+        category: "Monthly",
+        title: "Deep clean mirrors & glass surfaces",
+        details: "Streak-free clean on all mirrors, glass shelves, picture frames."
+      },
+      {
+        category: "Monthly",
+        title: "Wipe light bulbs & lampshades",
+        details: "Dust on bulbs dims light. Lampshades gather dust and cobwebs."
+      },
+      {
+        category: "Monthly",
+        title: "Clean kitchen bin & compost",
+        details: "Scrub the bin itself, not just empty it. Bits get stuck inside."
+      },
+
+      // QUARTERLY TASKS
+      {
+        category: "Quarterly",
+        title: "Descale kettle & coffee maker",
+        details: "Limescale buildup affects taste and heating. Use descaling solution."
+      },
+      {
+        category: "Quarterly",
+        title: "Clean dishwasher filter & spray arms",
+        details: "Blocked filters and arms mean dishes don't clean properly."
+      },
+      {
+        category: "Quarterly",
+        title: "Wash & rotate mattresses",
+        details: "Dust mite control. Helps mattress last longer and sleep stays fresher."
+      },
+      {
+        category: "Quarterly",
+        title: "Deep clean all carpets or rugs",
+        details: "Vacuum from multiple angles, spot-clean stains. Dirt embeds over time."
+      },
+      {
+        category: "Quarterly",
+        title: "Wipe down all ceiling corners & vents",
+        details: "Cobwebs, dust, and spiderwebs accumulate up there. People notice!"
+      },
+      {
+        category: "Quarterly",
+        title: "Clean inside kitchen drawers",
+        details: "Bits of food, dust, debris gather in drawer bottoms and corners."
+      },
+      {
+        category: "Quarterly",
+        title: "Degrease kitchen extractor hood",
+        details: "Grease buildup is a fire risk and makes cooking smell stale."
+      },
+      {
+        category: "Quarterly",
+        title: "Clean baseboards throughout home",
+        details: "Thorough wipe and scrub of all skirting boards. Shows when done!"
+      },
+      {
+        category: "Quarterly",
+        title: "Wash all bed pillows & covers",
+        details: "Besides sheets—pillows themselves need washing for hygiene."
+      },
+      {
+        category: "Quarterly",
+        title: "Damp-wipe all walls for marks & dust",
+        details: "Fingerprints, scuffs, and dust settle on walls. Freshens whole room."
+      },
+      {
+        category: "Quarterly",
+        title: "Clean inside all cupboards & reorganize",
+        details: "Check expiry dates, wipe shelves, organize contents. Prevents waste."
+      },
+      {
+        category: "Quarterly",
+        title: "Deep clean bathroom cabinets & drawers",
+        details: "Dust, spills, and old products accumulate. Clear, wipe, organize."
+      }
+    ];
+
+    let completed = new Map();
+    let currentFilter = 'all';
+
+    // Initialize storage
+    function initStorage() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          completed = new Map(JSON.parse(stored));
+        }
+      } catch (e) {
+        console.log('Storage not available, using local state');
+      }
+    }
+
+    // Save to storage
+    function saveToStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(completed.entries())));
+      } catch (e) {
+        console.log('Could not save to storage');
+      }
+    }
+
+    function getGreeting() {
+      const hour = new Date().getHours();
+      if (hour < 12) return "Good morning—let's tackle today";
+      if (hour < 18) return "Afternoon grind—you're halfway there";
+      return "Evening—small wins count";
+    }
+
+    document.getElementById('greeting').textContent = getGreeting();
+
+    function renderTasks() {
+      const tasksList = document.getElementById('tasksList');
+      tasksList.innerHTML = '';
+
+      let filteredTasks = tasks;
+      if (currentFilter === 'daily') {
+        filteredTasks = tasks.filter(t => t.category === 'Daily');
+      } else if (currentFilter === 'weekly') {
+        filteredTasks = tasks.filter(t => t.category === 'Weekly');
+      } else if (currentFilter === 'monthly') {
+        filteredTasks = tasks.filter(t => t.category === 'Monthly');
+      } else if (currentFilter === 'quarterly') {
+        filteredTasks = tasks.filter(t => t.category === 'Quarterly');
+      } else if (currentFilter === 'completed') {
+        filteredTasks = tasks.filter((_, i) => completed.has(i) && completed.get(i).completed);
+      }
+
+      if (filteredTasks.length === 0) {
+        tasksList.innerHTML = '<div class="empty-state"><p>No tasks here! You\'re crushing it.</p></div>';
+        return;
+      }
+
+      let currentCategory = '';
+      filteredTasks.forEach((task) => {
+        const taskIndex = tasks.indexOf(task);
+        const taskData = completed.get(taskIndex) || { completed: false, completedBy: '', timestamp: 0 };
+        const isCompleted = taskData.completed;
+
+        if (task.category !== currentCategory) {
+          currentCategory = task.category;
+          const section = document.createElement('div');
+          section.className = 'section-title';
+          section.textContent = currentCategory;
+          tasksList.appendChild(section);
+        }
+
+        const taskCard = document.createElement('div');
+        taskCard.className = `task-card ${isCompleted ? 'completed' : ''}`;
+        taskCard.onclick = () => toggleTask(taskIndex);
+
+        let completedByHTML = '';
+        if (isCompleted && taskData.completedBy) {
+          completedByHTML = `<div class="completed-by">✓ ${taskData.completedBy}</div>`;
+        }
+
+        taskCard.innerHTML = `
+          <div class="task-header">
+            <div class="checkbox"></div>
+            <div class="task-content">
+              <p class="task-title">${task.title}</p>
+              <div class="task-details">${task.details}</div>
+              <span class="task-category">${task.category}</span>
+              ${completedByHTML}
+            </div>
+          </div>
+        `;
+
+        tasksList.appendChild(taskCard);
+      });
+
+      updateProgress();
+    }
+
+    function toggleTask(index) {
+      const userName = document.getElementById('userName').value || 'Someone';
+
+      if (completed.has(index) && completed.get(index).completed) {
+        completed.delete(index);
+      } else {
+        completed.set(index, {
+          completed: true,
+          completedBy: userName,
+          timestamp: Date.now()
+        });
+      }
+
+      saveToStorage();
+      renderTasks();
+    }
+
+    function updateProgress() {
+      const total = tasks.length;
+      const done = Array.from(completed.values()).filter(v => v.completed).length;
+      const percent = total > 0 ? Math.round((done / total) * 100) : 0;
+
+      document.getElementById('progressFill').style.width = percent + '%';
+      document.getElementById('progressText').textContent = `${done} of ${total} complete`;
+    }
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.onclick = (e) => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        renderTasks();
+      };
+    });
+
+    // Reset buttons
+    document.getElementById('resetBtn').onclick = () => {
+      if (confirm('Reset all daily tasks for today?')) {
+        tasks.forEach((task, i) => {
+          if (task.category === 'Daily') {
+            completed.delete(i);
+          }
+        });
+        saveToStorage();
+        renderTasks();
+      }
+    };
+
+    document.getElementById('resetWeeklyBtn').onclick = () => {
+      if (confirm('Reset all weekly tasks for this week?')) {
+        tasks.forEach((task, i) => {
+          if (task.category === 'Weekly') {
+            completed.delete(i);
+          }
+        });
+        saveToStorage();
+        renderTasks();
+      }
+    };
+
+    // Update sync status
+    function updateSyncStatus() {
+      const status = document.getElementById('syncStatus');
+      status.textContent = 'Synced ✓';
+      setTimeout(() => {
+        status.textContent = 'Last synced just now';
+      }, 2000);
+    }
+
+    // Initialize
+    initStorage();
+    renderTasks();
+    updateSyncStatus();
+
+    // Auto-refresh to catch updates from the other person
+    setInterval(() => {
+      renderTasks();
+    }, SYNC_INTERVAL);
+
+    // Update name in storage
+    document.getElementById('userName').addEventListener('change', () => {
+      saveToStorage();
+    });
+  </script>
+</body>
+</html>
